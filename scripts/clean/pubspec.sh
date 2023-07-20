@@ -1,0 +1,1 @@
+rm -rf pubspec.lock && fvm flutter pub get

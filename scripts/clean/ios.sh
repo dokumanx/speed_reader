@@ -1,0 +1,1 @@
+cd ios && rm -rf Podfile.lock Pods/ && pod install --repo-update && cd ../

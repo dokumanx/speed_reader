@@ -1,0 +1,1 @@
+fvm flutter run --flavor production --target lib/main_production.dart --dart-define=ENV=prod
