@@ -1,14 +1,16 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:speed_reader/blocs/color_convertor.dart';
 
 part 'reading_bloc.freezed.dart';
+part 'reading_bloc.g.dart';
 part 'reading_event.dart';
 part 'reading_state.dart';
 
-class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
+class ReadingBloc extends HydratedBloc<ReadingEvent, ReadingState> {
   ReadingBloc() : super(const ReadingState()) {
     on<ReadingEvent>((event, emit) {
       event.map(
@@ -32,7 +34,16 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
   String _getWordsInRange({int? index, int? wordsDisplayed}) {
     final endIndex =
         (index ?? state.index) + (wordsDisplayed ?? state.wordsDisplayed);
-    return state.words.sublist(state.index, endIndex).join(' ');
+
+    late final String currentText;
+    if (endIndex > state.words.length) {
+      currentText = state.words.sublist(index ?? state.index).join(' ');
+    } else {
+      currentText =
+          state.words.sublist(index ?? state.index, endIndex).join(' ');
+    }
+
+    return currentText;
   }
 
   Duration _estimateDuration(double wpm) {
@@ -55,7 +66,7 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
     emit(state.copyWith(reading: Reading.running));
     _timer = createTimer(state.wpm, (timer) {
       if (state.index < state.words.length - 1) {
-        final newIndex = state.index + 1;
+        final newIndex = state.index + state.wordsDisplayed;
         add(ReadingEvent.update(
           index: newIndex,
         ));
@@ -72,14 +83,20 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
 
   void _updateReading(_Update value, Emitter<ReadingState> emit) {
     final words = value.words ?? state.words;
-    final index = value.index ?? state.index;
+    var index = value.index ?? state.index;
     final wpm = value.wpm ?? state.wpm;
     final wordsDisplayed = value.wordsDisplayed ?? state.wordsDisplayed;
     final fontScale = value.fontScale ?? state.fontScale;
     final textColor = value.textColor ?? state.textColor;
 
     final endIndex = index + wordsDisplayed;
-    final currentText = words.sublist(index, endIndex).join(' ');
+    late final String currentText;
+    if (endIndex > words.length) {
+      currentText = words.sublist(index).join(' ');
+      index = words.length - 1;
+    } else {
+      currentText = words.sublist(index, endIndex).join(' ');
+    }
     emit(
       state.copyWith(
         words: words,
@@ -102,7 +119,7 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
     emit(
       state.copyWith(
         index: 0,
-        currentText: _getWordsInRange(index: 0, wordsDisplayed: 1),
+        currentText: _getWordsInRange(index: 0),
         reading: Reading.initial,
       ),
     );
@@ -124,5 +141,15 @@ class ReadingBloc extends Bloc<ReadingEvent, ReadingState> {
   void _cancelTimer() {
     _timer?.cancel();
     _timer = null;
+  }
+
+  @override
+  ReadingState? fromJson(Map<String, dynamic> json) {
+    return ReadingState.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic>? toJson(ReadingState state) {
+    return state.toJson();
   }
 }

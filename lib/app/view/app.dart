@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:speed_reader/blocs/reading_bloc/bloc.dart';
 import 'package:speed_reader/l10n/l10n.dart';
-import 'package:speed_reader/speed_reader_page.dart';
+import 'package:speed_reader/pages/reading_list_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -22,7 +22,7 @@ class App extends StatelessWidget {
             ),
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: const SpeedReaderPage(),
+            home: const ReadingListPage(),
           );
         },
       ),

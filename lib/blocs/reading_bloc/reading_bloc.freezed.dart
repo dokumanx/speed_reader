@@ -832,17 +832,27 @@ abstract class _Update implements ReadingEvent {
       throw _privateConstructorUsedError;
 }
 
+ReadingState _$ReadingStateFromJson(Map<String, dynamic> json) {
+  return _ReadingState.fromJson(json);
+}
+
 /// @nodoc
 mixin _$ReadingState {
+  @ignore
   Reading get reading => throw _privateConstructorUsedError;
+  @ignore
   List<String> get words => throw _privateConstructorUsedError;
+  @ignore
   int get index => throw _privateConstructorUsedError;
+  @ignore
   String get currentText => throw _privateConstructorUsedError;
   int get wordsDisplayed => throw _privateConstructorUsedError;
   double get fontScale => throw _privateConstructorUsedError;
   int get wpm => throw _privateConstructorUsedError;
+  @colorConvertor
   Color get textColor => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ReadingStateCopyWith<ReadingState> get copyWith =>
       throw _privateConstructorUsedError;
@@ -855,14 +865,14 @@ abstract class $ReadingStateCopyWith<$Res> {
       _$ReadingStateCopyWithImpl<$Res, ReadingState>;
   @useResult
   $Res call(
-      {Reading reading,
-      List<String> words,
-      int index,
-      String currentText,
+      {@ignore Reading reading,
+      @ignore List<String> words,
+      @ignore int index,
+      @ignore String currentText,
       int wordsDisplayed,
       double fontScale,
       int wpm,
-      Color textColor});
+      @colorConvertor Color textColor});
 }
 
 /// @nodoc
@@ -933,14 +943,14 @@ abstract class _$$_ReadingStateCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {Reading reading,
-      List<String> words,
-      int index,
-      String currentText,
+      {@ignore Reading reading,
+      @ignore List<String> words,
+      @ignore int index,
+      @ignore String currentText,
       int wordsDisplayed,
       double fontScale,
       int wpm,
-      Color textColor});
+      @colorConvertor Color textColor});
 }
 
 /// @nodoc
@@ -1001,25 +1011,28 @@ class __$$_ReadingStateCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$_ReadingState implements _ReadingState {
   const _$_ReadingState(
-      {this.reading = Reading.initial,
-      final List<String> words = const [],
-      this.index = 0,
-      this.currentText = '',
+      {@ignore this.reading = Reading.initial,
+      @ignore final List<String> words = const [],
+      @ignore this.index = 0,
+      @ignore this.currentText = '',
       this.wordsDisplayed = 1,
       this.fontScale = 1,
       this.wpm = 100,
-      this.textColor = Colors.black})
+      @colorConvertor this.textColor = Colors.black})
       : _words = words;
 
+  factory _$_ReadingState.fromJson(Map<String, dynamic> json) =>
+      _$$_ReadingStateFromJson(json);
+
   @override
-  @JsonKey()
+  @ignore
   final Reading reading;
   final List<String> _words;
   @override
-  @JsonKey()
+  @ignore
   List<String> get words {
     if (_words is EqualUnmodifiableListView) return _words;
     // ignore: implicit_dynamic_type
@@ -1027,10 +1040,10 @@ class _$_ReadingState implements _ReadingState {
   }
 
   @override
-  @JsonKey()
+  @ignore
   final int index;
   @override
-  @JsonKey()
+  @ignore
   final String currentText;
   @override
   @JsonKey()
@@ -1043,6 +1056,7 @@ class _$_ReadingState implements _ReadingState {
   final int wpm;
   @override
   @JsonKey()
+  @colorConvertor
   final Color textColor;
 
   @override
@@ -1069,6 +1083,7 @@ class _$_ReadingState implements _ReadingState {
                 other.textColor == textColor));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -1086,26 +1101,40 @@ class _$_ReadingState implements _ReadingState {
   @pragma('vm:prefer-inline')
   _$$_ReadingStateCopyWith<_$_ReadingState> get copyWith =>
       __$$_ReadingStateCopyWithImpl<_$_ReadingState>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_ReadingStateToJson(
+      this,
+    );
+  }
 }
 
 abstract class _ReadingState implements ReadingState {
   const factory _ReadingState(
-      {final Reading reading,
-      final List<String> words,
-      final int index,
-      final String currentText,
+      {@ignore final Reading reading,
+      @ignore final List<String> words,
+      @ignore final int index,
+      @ignore final String currentText,
       final int wordsDisplayed,
       final double fontScale,
       final int wpm,
-      final Color textColor}) = _$_ReadingState;
+      @colorConvertor final Color textColor}) = _$_ReadingState;
+
+  factory _ReadingState.fromJson(Map<String, dynamic> json) =
+      _$_ReadingState.fromJson;
 
   @override
+  @ignore
   Reading get reading;
   @override
+  @ignore
   List<String> get words;
   @override
+  @ignore
   int get index;
   @override
+  @ignore
   String get currentText;
   @override
   int get wordsDisplayed;
@@ -1114,6 +1143,7 @@ abstract class _ReadingState implements ReadingState {
   @override
   int get wpm;
   @override
+  @colorConvertor
   Color get textColor;
   @override
   @JsonKey(ignore: true)

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:speed_reader/blocs/reading_bloc/bloc.dart';
+import 'package:speed_reader/constants/tailwind_colors.dart';
 import 'package:speed_reader/extensions/show_modal_extensions.dart';
 import 'package:speed_reader/extensions/theme_extension.dart';
 import 'package:speed_reader/spacing/spacing.dart';
@@ -33,8 +35,19 @@ class _SpeedReaderPageState extends State<SpeedReaderPage> {
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(
-              height: 30,
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SquareContainer(
+                  color: TailwindColors.fuchsia.withOpacity(.3),
+                  dimension: 35,
+                  child: const Icon(LucideIcons.arrowLeft),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -174,7 +187,8 @@ class _SpeedReaderPageState extends State<SpeedReaderPage> {
                     return previous.textColor != current.textColor ||
                         previous.fontScale != current.fontScale ||
                         previous.wordsDisplayed != current.wordsDisplayed ||
-                        previous.currentText != current.currentText;
+                        previous.currentText != current.currentText ||
+                        previous.reading != current.reading;
                   },
                   builder: (context, state) {
                     final fontScale = state.fontScale;
