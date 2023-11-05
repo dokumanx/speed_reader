@@ -846,6 +846,8 @@ mixin _$ReadingState {
   int get index => throw _privateConstructorUsedError;
   @ignore
   String get currentText => throw _privateConstructorUsedError;
+  @ignore
+  String get highlightedText => throw _privateConstructorUsedError;
   int get wordsDisplayed => throw _privateConstructorUsedError;
   double get fontScale => throw _privateConstructorUsedError;
   int get wpm => throw _privateConstructorUsedError;
@@ -869,6 +871,7 @@ abstract class $ReadingStateCopyWith<$Res> {
       @ignore List<String> words,
       @ignore int index,
       @ignore String currentText,
+      @ignore String highlightedText,
       int wordsDisplayed,
       double fontScale,
       int wpm,
@@ -892,6 +895,7 @@ class _$ReadingStateCopyWithImpl<$Res, $Val extends ReadingState>
     Object? words = null,
     Object? index = null,
     Object? currentText = null,
+    Object? highlightedText = null,
     Object? wordsDisplayed = null,
     Object? fontScale = null,
     Object? wpm = null,
@@ -913,6 +917,10 @@ class _$ReadingStateCopyWithImpl<$Res, $Val extends ReadingState>
       currentText: null == currentText
           ? _value.currentText
           : currentText // ignore: cast_nullable_to_non_nullable
+              as String,
+      highlightedText: null == highlightedText
+          ? _value.highlightedText
+          : highlightedText // ignore: cast_nullable_to_non_nullable
               as String,
       wordsDisplayed: null == wordsDisplayed
           ? _value.wordsDisplayed
@@ -947,6 +955,7 @@ abstract class _$$_ReadingStateCopyWith<$Res>
       @ignore List<String> words,
       @ignore int index,
       @ignore String currentText,
+      @ignore String highlightedText,
       int wordsDisplayed,
       double fontScale,
       int wpm,
@@ -968,6 +977,7 @@ class __$$_ReadingStateCopyWithImpl<$Res>
     Object? words = null,
     Object? index = null,
     Object? currentText = null,
+    Object? highlightedText = null,
     Object? wordsDisplayed = null,
     Object? fontScale = null,
     Object? wpm = null,
@@ -989,6 +999,10 @@ class __$$_ReadingStateCopyWithImpl<$Res>
       currentText: null == currentText
           ? _value.currentText
           : currentText // ignore: cast_nullable_to_non_nullable
+              as String,
+      highlightedText: null == highlightedText
+          ? _value.highlightedText
+          : highlightedText // ignore: cast_nullable_to_non_nullable
               as String,
       wordsDisplayed: null == wordsDisplayed
           ? _value.wordsDisplayed
@@ -1018,6 +1032,7 @@ class _$_ReadingState implements _ReadingState {
       @ignore final List<String> words = const [],
       @ignore this.index = 0,
       @ignore this.currentText = '',
+      @ignore this.highlightedText = '',
       this.wordsDisplayed = 1,
       this.fontScale = 1,
       this.wpm = 100,
@@ -1046,6 +1061,9 @@ class _$_ReadingState implements _ReadingState {
   @ignore
   final String currentText;
   @override
+  @ignore
+  final String highlightedText;
+  @override
   @JsonKey()
   final int wordsDisplayed;
   @override
@@ -1061,7 +1079,7 @@ class _$_ReadingState implements _ReadingState {
 
   @override
   String toString() {
-    return 'ReadingState(reading: $reading, words: $words, index: $index, currentText: $currentText, wordsDisplayed: $wordsDisplayed, fontScale: $fontScale, wpm: $wpm, textColor: $textColor)';
+    return 'ReadingState(reading: $reading, words: $words, index: $index, currentText: $currentText, highlightedText: $highlightedText, wordsDisplayed: $wordsDisplayed, fontScale: $fontScale, wpm: $wpm, textColor: $textColor)';
   }
 
   @override
@@ -1074,6 +1092,8 @@ class _$_ReadingState implements _ReadingState {
             (identical(other.index, index) || other.index == index) &&
             (identical(other.currentText, currentText) ||
                 other.currentText == currentText) &&
+            (identical(other.highlightedText, highlightedText) ||
+                other.highlightedText == highlightedText) &&
             (identical(other.wordsDisplayed, wordsDisplayed) ||
                 other.wordsDisplayed == wordsDisplayed) &&
             (identical(other.fontScale, fontScale) ||
@@ -1091,6 +1111,7 @@ class _$_ReadingState implements _ReadingState {
       const DeepCollectionEquality().hash(_words),
       index,
       currentText,
+      highlightedText,
       wordsDisplayed,
       fontScale,
       wpm,
@@ -1116,6 +1137,7 @@ abstract class _ReadingState implements ReadingState {
       @ignore final List<String> words,
       @ignore final int index,
       @ignore final String currentText,
+      @ignore final String highlightedText,
       final int wordsDisplayed,
       final double fontScale,
       final int wpm,
@@ -1136,6 +1158,9 @@ abstract class _ReadingState implements ReadingState {
   @override
   @ignore
   String get currentText;
+  @override
+  @ignore
+  String get highlightedText;
   @override
   int get wordsDisplayed;
   @override

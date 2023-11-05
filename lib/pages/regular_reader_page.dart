@@ -12,14 +12,9 @@ import 'package:speed_reader/pages/components/widgets/wpm_controller.dart';
 import 'package:speed_reader/pages/reader_controllers.dart';
 import 'package:speed_reader/widgets/square_container.dart';
 
-class SpeedReaderPage extends StatefulWidget {
-  const SpeedReaderPage({super.key});
+class RegularReaderPage extends StatelessWidget {
+  const RegularReaderPage({super.key});
 
-  @override
-  State<SpeedReaderPage> createState() => _SpeedReaderPageState();
-}
-
-class _SpeedReaderPageState extends State<SpeedReaderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,22 +68,30 @@ class _SpeedReaderPageState extends State<SpeedReaderPage> {
                     final fontScale = state.fontScale;
 
                     final textColor = state.textColor.toRGBString(1);
-                    final currentText = state.currentText;
+                    final highlightedText = state.highlightedText;
 
                     return HtmlWidget(
-                      '<div class="container">$currentText</div>',
+                      '<div class="container"> <span class="font">$highlightedText</span></div>',
                       enableCaching: false,
                       customStylesBuilder: (element) {
                         final fontSize = 30 * fontScale;
-                        if (element.classes.contains('words')) {
+                        if (element.classes.contains('font')) {
                           return {
                             'font-size': '${fontSize}px',
                             'color': textColor,
                             'font-weight': '500',
                           };
+                        } else if (element.classes.contains('highlighted')) {
+                          return {
+                            'font-size': '${fontSize}px',
+                            'color': Colors.black87.toRGBString(1),
+                            'background-color': Colors.blue.toRGBString(.6),
+                            'border-radius': '4px',
+                            'font-weight': '500',
+                          };
                         } else if (element.classes.contains('container')) {
                           return {
-                            'text-align': 'center',
+                            'text-align': 'justify',
                             'padding-left': '20px',
                             'padding-right': '20px',
                           };
@@ -109,77 +112,5 @@ class _SpeedReaderPageState extends State<SpeedReaderPage> {
         ),
       ),
     );
-  }
-
-  String convertToBionic(String word,
-      {required int index,
-      int fixation = 2,
-      int saccade = 1,
-      double opacity = 1.0}) {
-    final saccade0 = saccade + 1;
-
-    // Determine the maximum number of non-bold characters to be highlighted based on the length of the input word and the fixation strength
-    int maxNonBoldChars;
-    if (word.length <= 4) {
-      maxNonBoldChars = 1 + fixation;
-    } else if (word.length <= 12) {
-      maxNonBoldChars = 2 + fixation;
-    } else if (word.length <= 16) {
-      maxNonBoldChars = 3 + fixation;
-    } else if (word.length <= 24) {
-      maxNonBoldChars = 4 + fixation;
-    } else if (word.length <= 29) {
-      maxNonBoldChars = 5 + fixation;
-    } else if (word.length <= 35) {
-      maxNonBoldChars = 6 + fixation;
-    } else if (word.length <= 42) {
-      maxNonBoldChars = 7 + fixation;
-    } else if (word.length <= 48) {
-      maxNonBoldChars = 8 + fixation;
-    } else {
-      maxNonBoldChars = 9 + fixation;
-    }
-
-    // Divide the input word into substrings based on special characters (excluding dashes) if they exist in the word
-    final substrings = <String>[];
-    final currentSubstring = StringBuffer();
-    for (var i = 0; i < word.length; i++) {
-      if (word[i].contains(RegExp('[a-zA-Z0-9]'))) {
-        currentSubstring.write(word[i]);
-      } else if (word[i] == '-') {
-        substrings.add(currentSubstring.toString());
-        currentSubstring.clear();
-        substrings.add('-');
-      }
-    }
-    substrings.add(currentSubstring.toString());
-
-    // Replace the non-bold characters with span tags in the substrings that exceed the maximum number of non-bold characters
-    for (var i = 0; i < substrings.length; i += saccade0 * 2) {
-      bool division;
-      if (index == 0 && saccade0 == 0) {
-        division = true;
-      } else {
-        division = index % saccade0 == 0;
-      }
-
-      if (division && substrings[i].length > maxNonBoldChars) {
-        final numNonBoldChars = substrings[i].length - maxNonBoldChars;
-        final boldSubstring =
-            '<span style="font-weight:bold;opacity:${opacity.toStringAsFixed(1)};">${substrings[i].substring(0, numNonBoldChars)}</span>';
-        substrings[i] =
-            boldSubstring + substrings[i].substring(numNonBoldChars);
-      }
-      index++;
-    }
-
-    // Concatenate the substrings and return the resulting bionic word
-    final result = StringBuffer();
-    for (var i = 0; i < substrings.length; i++) {
-      if (substrings[i].isNotEmpty) {
-        result.write(substrings[i]);
-      }
-    }
-    return result.toString();
   }
 }

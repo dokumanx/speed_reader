@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:speed_reader/blocs/reading_bloc/bloc.dart';
-import 'package:speed_reader/pages/speed_reader_page.dart';
+import 'package:speed_reader/pages/regular_reader_page.dart';
 
 class ReadingListPage extends StatelessWidget {
   const ReadingListPage({super.key});
@@ -18,7 +18,7 @@ class ReadingListPage extends StatelessWidget {
                     create: (context) => ReadingBloc()
                       ..add(
                           ReadingEvent.update(words: value?.text!.split(' '))),
-                    child: const SpeedReaderPage(),
+                    child: const RegularReaderPage(),
                   ),
                 ),
               ));

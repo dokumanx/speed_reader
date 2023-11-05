@@ -9,6 +9,8 @@ class ReadingState with _$ReadingState {
     @ignore @Default([]) List<String> words,
     @ignore @Default(0) int index,
     @ignore @Default('') String currentText,
+    @ignore @Default('') String highlightedText,
+
     @Default(1) int wordsDisplayed,
     @Default(1) double fontScale,
     @Default(100) int wpm,

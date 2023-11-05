@@ -6,12 +6,18 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:speed_reader/blocs/color_convertor.dart';
 
 part 'reading_bloc.freezed.dart';
+
 part 'reading_bloc.g.dart';
+
 part 'reading_event.dart';
+
 part 'reading_state.dart';
 
 class ReadingBloc extends HydratedBloc<ReadingEvent, ReadingState> {
-  ReadingBloc() : super(const ReadingState()) {
+  ReadingBloc({
+    this.maxFontScale = 1.5,
+    this.minFontScale = 0.7,
+  }) : super(const ReadingState()) {
     on<ReadingEvent>((event, emit) {
       event.map(
         start: (value) => _startReading(value, emit),
@@ -24,6 +30,8 @@ class ReadingBloc extends HydratedBloc<ReadingEvent, ReadingState> {
   }
 
   Timer? _timer;
+  final double maxFontScale;
+  final double minFontScale;
 
   @override
   Future<void> close() {
@@ -31,7 +39,11 @@ class ReadingBloc extends HydratedBloc<ReadingEvent, ReadingState> {
     return super.close();
   }
 
-  String _getWordsInRange({int? index, int? wordsDisplayed}) {
+  String _getWordsInRange({
+    int? index,
+    int? wordsDisplayed,
+    bool highlighted = false,
+  }) {
     final endIndex =
         (index ?? state.index) + (wordsDisplayed ?? state.wordsDisplayed);
 
@@ -43,8 +55,17 @@ class ReadingBloc extends HydratedBloc<ReadingEvent, ReadingState> {
           state.words.sublist(index ?? state.index, endIndex).join(' ');
     }
 
-    return currentText;
+    if (highlighted) {
+      return highlightedTextHtml(currentText);
+    } else {
+      return currentTextHtml(currentText);
+    }
   }
+
+  String currentTextHtml(String text) => '<span class="words">$text</span>';
+
+  String highlightedTextHtml(String text) =>
+      '<span class="highlighted">$text</span>';
 
   Duration _estimateDuration(double wpm) {
     return Duration(milliseconds: ((60 / wpm) * 1000).round());
@@ -91,11 +112,32 @@ class ReadingBloc extends HydratedBloc<ReadingEvent, ReadingState> {
 
     final endIndex = index + wordsDisplayed;
     late final String currentText;
+    late final String highlightedText;
     if (endIndex > words.length) {
       currentText = words.sublist(index).join(' ');
       index = words.length - 1;
+      final tempWords = List.of(words);
+
+      // ignore: cascade_invocations
+      tempWords.replaceRange(
+        index,
+        words.length,
+        highlightedTextHtml(currentText).split(' '),
+      );
+
+      highlightedText = tempWords.join(' ');
     } else {
       currentText = words.sublist(index, endIndex).join(' ');
+      final tempWords = List.of(words);
+
+      // ignore: cascade_invocations
+      tempWords.replaceRange(
+        index,
+        endIndex,
+        highlightedTextHtml(currentText).split(' '),
+      );
+
+      highlightedText = tempWords.join(' ');
     }
     emit(
       state.copyWith(
@@ -105,7 +147,8 @@ class ReadingBloc extends HydratedBloc<ReadingEvent, ReadingState> {
         fontScale: fontScale,
         textColor: textColor,
         wpm: wpm,
-        currentText: currentText,
+        currentText: currentTextHtml(currentText),
+        highlightedText: highlightedText,
       ),
     );
     if (state.reading == Reading.running) {
@@ -116,10 +159,26 @@ class ReadingBloc extends HydratedBloc<ReadingEvent, ReadingState> {
 
   void _resetReading(_Reset value, Emitter<ReadingState> emit) {
     _cancelTimer();
+
+    final wordsDisplayed = state.wordsDisplayed;
+    final words = state.words;
+    const index = 0;
+
+    final tempWords = List.of(words);
+
+    // ignore: cascade_invocations
+    tempWords.replaceRange(
+      index,
+      wordsDisplayed,
+      highlightedTextHtml(_getWordsInRange(index: index)).split(' '),
+    );
+    final highlightedText = tempWords.join(' ');
+
     emit(
       state.copyWith(
-        index: 0,
-        currentText: _getWordsInRange(index: 0),
+        index: index,
+        currentText: _getWordsInRange(index: index),
+        highlightedText: highlightedText,
         reading: Reading.initial,
       ),
     );
@@ -131,11 +190,23 @@ class ReadingBloc extends HydratedBloc<ReadingEvent, ReadingState> {
   }
 
   void decreaseFontScale() {
-    add(ReadingEvent.update(fontScale: state.fontScale - 0.1));
+    final updatedScale = state.fontScale - 0.1;
+
+    if (updatedScale < minFontScale) {
+      return;
+    }
+
+    add(ReadingEvent.update(fontScale: updatedScale));
   }
 
   void increaseFontScale() {
-    add(ReadingEvent.update(fontScale: state.fontScale + 0.1));
+    final updatedScale = state.fontScale + 0.1;
+
+    if (updatedScale > maxFontScale) {
+      return;
+    }
+
+    add(ReadingEvent.update(fontScale: updatedScale));
   }
 
   void _cancelTimer() {
