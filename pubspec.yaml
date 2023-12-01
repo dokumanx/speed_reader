@@ -37,7 +37,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.0
-  flutter_widget_from_html: ^0.10.3
+  flutter_widget_from_html: ^0.14.9
   lucide_icons: ^0.257.0
   font_awesome_flutter: ^10.5.0
   cupertino_modal_sheet: ^1.0.0
